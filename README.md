@@ -1,3 +1,64 @@
+# AX JXScout
+
+This repository is a GPL-3.0 fork of
+[francisconeves97/jxscout](https://github.com/francisconeves97/jxscout). It adds
+`ax-jxscout`, a non-interactive command for Unix pipelines and distributed
+workers. The original proxy/TUI command remains available under
+`cmd/jxscout`.
+
+`ax-jxscout` accepts HTTP(S) seed URLs from stdin, an input file, or positional
+arguments. It fetches each page, extracts script and preload URLs, runs the
+inherited Webpack/Vite chunk detector, recursively fetches discovered chunks,
+and writes newline-delimited JSON to stdout. Operational failures are records
+on stdout so one unavailable target does not discard successful assets.
+
+## Pipe command
+
+Requirements:
+
+- Go 1.23.2 or newer.
+- Bun 1.2.12 or newer. The inherited chunk engine is embedded in the Go binary
+  as JavaScript and executed with Bun; a future container image must include
+  both the Go binary and Bun.
+
+Build and test:
+
+```bash
+make build-pipe
+make test-pipe
+```
+
+Read URLs from stdin:
+
+```bash
+printf 'https://example.com/\n' |
+  ./dist/ax-jxscout \
+    -rate-limit 2 \
+    -max-assets-per-seed 500 \
+  > assets.jsonl
+```
+
+Read from a file:
+
+```bash
+./dist/ax-jxscout -input-file urls.txt > assets.jsonl
+```
+
+The default scope is the host from the seed URL and its redirect destination.
+Use `-allow-cross-origin` only when referenced CDN hosts are authorized. Run
+`./dist/ax-jxscout -h` for all limits and concurrency options.
+
+Each `asset` record contains the effective URL, parent relationship, response
+metadata, SHA-256, and the exact response body encoded as `gzip+base64`.
+`error` records describe target-level failures. One `summary` record per seed
+has a status of `complete`, `complete_with_errors`, `failed`, or `truncated`.
+
+The command discovers JavaScript statically reachable from the supplied pages.
+It does not drive a browser, crawl application routes, authenticate, or promise
+coverage of URLs assembled only at runtime.
+
+## Upstream project
+
 > ⚠️ This version of JXScout is no longer actively maintained.
 >
 > JXScout has evolved a lot since this open source version was first released. The project has been completely rewritten from scratch in Rust as JXScout Pro, which is a separate, closed source codebase. JXScout Pro is a completely different product — it doesn't share any code with this version and is far more capable.

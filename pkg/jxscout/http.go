@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	jxscouttypes "github.com/francisconeves97/jxscout/pkg/types"
+	jxscouttypes "github.com/lociko/ax_jxscout/pkg/types"
 )
 
 type httpServer struct {

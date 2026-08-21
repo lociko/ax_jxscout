@@ -5,11 +5,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/francisconeves97/jxscout/internal/core/errutil"
-	jxwebsocket "github.com/francisconeves97/jxscout/internal/core/websocket"
-	"github.com/francisconeves97/jxscout/internal/modules/beautifier"
-	jxscouttypes "github.com/francisconeves97/jxscout/pkg/types"
 	"github.com/gorilla/websocket"
+	"github.com/lociko/ax_jxscout/internal/core/errutil"
+	jxwebsocket "github.com/lociko/ax_jxscout/internal/core/websocket"
+	"github.com/lociko/ax_jxscout/internal/modules/beautifier"
+	jxscouttypes "github.com/lociko/ax_jxscout/pkg/types"
 )
 
 const (

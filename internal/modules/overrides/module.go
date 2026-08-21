@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/francisconeves97/jxscout/internal/core/common"
-	"github.com/francisconeves97/jxscout/internal/core/errutil"
-	jxscouttypes "github.com/francisconeves97/jxscout/pkg/types"
 	"github.com/google/uuid"
+	"github.com/lociko/ax_jxscout/internal/core/common"
+	"github.com/lociko/ax_jxscout/internal/core/errutil"
+	jxscouttypes "github.com/lociko/ax_jxscout/pkg/types"
 )
 
 const (

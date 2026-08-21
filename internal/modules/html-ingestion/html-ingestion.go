@@ -7,11 +7,11 @@ import (
 	"net/url"
 	"strings"
 
-	assetservice "github.com/francisconeves97/jxscout/internal/core/asset-service"
-	"github.com/francisconeves97/jxscout/internal/core/common"
-	"github.com/francisconeves97/jxscout/internal/core/errutil"
-	"github.com/francisconeves97/jxscout/internal/modules/ingestion"
-	jxscouttypes "github.com/francisconeves97/jxscout/pkg/types"
+	assetservice "github.com/lociko/ax_jxscout/internal/core/asset-service"
+	"github.com/lociko/ax_jxscout/internal/core/common"
+	"github.com/lociko/ax_jxscout/internal/core/errutil"
+	"github.com/lociko/ax_jxscout/internal/modules/ingestion"
+	jxscouttypes "github.com/lociko/ax_jxscout/pkg/types"
 )
 
 type htmlIngestionModule struct {

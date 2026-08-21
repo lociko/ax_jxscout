@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/francisconeves97/jxscout/internal/core/errutil"
 	"github.com/hasura/go-graphql-client"
+	"github.com/lociko/ax_jxscout/internal/core/errutil"
 )
 
 // authenticatedTransport adds the authorization header to requests

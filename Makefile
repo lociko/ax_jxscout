@@ -6,6 +6,13 @@ install:
 clean:
 	rm -rf dist/
 
+build-pipe:
+	mkdir -p dist
+	go build -o dist/ax-jxscout ./cmd/ax-jxscout
+
+test-pipe:
+	go test ./internal/pipeline ./internal/modules/chunk-discoverer ./cmd/ax-jxscout
+
 build:
 	bun run rsbuild build
 	mv dist/sourceMaps.js internal/modules/sourcemaps/sourcemaps.js

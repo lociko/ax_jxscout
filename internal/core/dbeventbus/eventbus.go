@@ -7,8 +7,8 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/francisconeves97/jxscout/internal/core/errutil"
 	"github.com/jmoiron/sqlx"
+	"github.com/lociko/ax_jxscout/internal/core/errutil"
 )
 
 const (

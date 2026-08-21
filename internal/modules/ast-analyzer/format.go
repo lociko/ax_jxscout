@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/francisconeves97/jxscout/internal/core/common"
+	"github.com/lociko/ax_jxscout/internal/core/common"
 )
 
 type AnalyzerMatch struct {

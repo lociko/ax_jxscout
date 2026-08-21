@@ -7,9 +7,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/francisconeves97/jxscout/internal/core/common"
-	"github.com/francisconeves97/jxscout/internal/core/errutil"
 	"github.com/jmoiron/sqlx"
+	"github.com/lociko/ax_jxscout/internal/core/common"
+	"github.com/lociko/ax_jxscout/internal/core/errutil"
 )
 
 const (

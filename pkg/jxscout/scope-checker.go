@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"regexp"
 
-	"github.com/francisconeves97/jxscout/internal/core/common"
-	jxscouttypes "github.com/francisconeves97/jxscout/pkg/types"
+	"github.com/lociko/ax_jxscout/internal/core/common"
+	jxscouttypes "github.com/lociko/ax_jxscout/pkg/types"
 )
 
 type scopeChecker struct {

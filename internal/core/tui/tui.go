@@ -12,9 +12,9 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/francisconeves97/jxscout/internal/modules/overrides"
-	"github.com/francisconeves97/jxscout/pkg/constants"
-	jxscouttypes "github.com/francisconeves97/jxscout/pkg/types"
+	"github.com/lociko/ax_jxscout/internal/modules/overrides"
+	"github.com/lociko/ax_jxscout/pkg/constants"
+	jxscouttypes "github.com/lociko/ax_jxscout/pkg/types"
 	"github.com/muesli/reflow/wordwrap"
 )
 
@@ -332,7 +332,7 @@ func (t *TUI) View() string {
 			Render("\n" + disclaimer + "\n"))
 
 		if t.hasUpdate {
-			updateMsg := fmt.Sprintf("\n🔄 A new version (%s) is available!\nVisit https://github.com/francisconeves97/jxscout to check it out.\n", t.latestVersion)
+			updateMsg := fmt.Sprintf("\n🔄 A new version (%s) is available!\nVisit https://github.com/lociko/ax_jxscout to check it out.\n", t.latestVersion)
 			s.WriteString(lipgloss.NewStyle().
 				Foreground(lipgloss.Color("205")).
 				Render(updateMsg))

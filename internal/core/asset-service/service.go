@@ -9,11 +9,11 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/francisconeves97/jxscout/internal/core/common"
-	"github.com/francisconeves97/jxscout/internal/core/dbeventbus"
-	"github.com/francisconeves97/jxscout/internal/core/errutil"
-	concurrentqueue "github.com/francisconeves97/jxscout/pkg/concurrent-queue"
-	"github.com/francisconeves97/jxscout/pkg/constants"
+	"github.com/lociko/ax_jxscout/internal/core/common"
+	"github.com/lociko/ax_jxscout/internal/core/dbeventbus"
+	"github.com/lociko/ax_jxscout/internal/core/errutil"
+	concurrentqueue "github.com/lociko/ax_jxscout/pkg/concurrent-queue"
+	"github.com/lociko/ax_jxscout/pkg/constants"
 )
 
 const (
