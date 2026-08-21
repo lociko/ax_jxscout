@@ -12,6 +12,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os/exec"
+	"slices"
 	"testing"
 	"time"
 )
@@ -48,7 +49,9 @@ func TestRunnerFetchesHTMLScriptsAndEmitsRecoverableContent(t *testing.T) {
 		t.Skip("bun is not installed")
 	}
 	javascript := []byte(`console.log("pipeline fixture");`)
+	var receivedHeaders []http.Header
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		receivedHeaders = append(receivedHeaders, request.Header.Clone())
 		switch request.URL.Path {
 		case "/":
 			writer.Header().Set("Content-Type", "text/html")
@@ -70,6 +73,7 @@ func TestRunnerFetchesHTMLScriptsAndEmitsRecoverableContent(t *testing.T) {
 		MaxResponseBytes:     1024 * 1024,
 		MaxAssetsPerSeed:     10,
 		ChunkBruteForceLimit: 10,
+		Headers:              http.Header{"X-Test": []string{"pipeline"}},
 	}, &output)
 	if err != nil {
 		t.Fatal(err)
@@ -112,5 +116,35 @@ func TestRunnerFetchesHTMLScriptsAndEmitsRecoverableContent(t *testing.T) {
 	parsed, _ := url.Parse(records[0].URL)
 	if parsed.Path != "/app.js" || records[1].Assets != 1 || records[1].Status != "complete" {
 		t.Fatalf("unexpected records: %#v", records)
+	}
+	if len(receivedHeaders) != 2 {
+		t.Fatalf("expected headers on two requests, got %d", len(receivedHeaders))
+	}
+	userAgent := receivedHeaders[0].Get("User-Agent")
+	if !slices.Contains(browserUserAgents, userAgent) {
+		t.Fatalf("unexpected default user agent: %q", userAgent)
+	}
+	for _, headers := range receivedHeaders {
+		if headers.Get("User-Agent") != userAgent || headers.Get("X-Test") != "pipeline" {
+			t.Fatalf("headers were not propagated consistently: %#v", headers)
+		}
+	}
+}
+
+func TestExplicitUserAgentOverridesDefault(t *testing.T) {
+	runner, err := New(Options{
+		Concurrency:          1,
+		RequestTimeout:       time.Second,
+		MaxResponseBytes:     1024,
+		MaxAssetsPerSeed:     1,
+		ChunkBruteForceLimit: 0,
+		Headers:              http.Header{"User-Agent": []string{"explicit-agent"}},
+	}, io.Discard)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer runner.Close()
+	if got := runner.headers.Get("User-Agent"); got != "explicit-agent" {
+		t.Fatalf("got %q, want explicit-agent", got)
 	}
 }

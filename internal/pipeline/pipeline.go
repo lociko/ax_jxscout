@@ -11,6 +11,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math/rand/v2"
 	"net/http"
 	"net/url"
 	"os"
@@ -24,7 +25,12 @@ import (
 	chunkdiscoverer "github.com/lociko/ax_jxscout/internal/modules/chunk-discoverer"
 )
 
-const userAgent = "ax-jxscout/0.1"
+var browserUserAgents = []string{
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0",
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0",
+}
 
 type Options struct {
 	Concurrency          int
@@ -34,6 +40,7 @@ type Options struct {
 	MaxAssetsPerSeed     int
 	ChunkBruteForceLimit int
 	AllowCrossOrigin     bool
+	Headers              http.Header
 }
 
 type Record struct {
@@ -64,6 +71,7 @@ type Runner struct {
 	limiter    *limiter
 	encoder    *json.Encoder
 	outputMu   sync.Mutex
+	headers    http.Header
 }
 
 func New(options Options, output io.Writer) (*Runner, error) {
@@ -108,12 +116,20 @@ func New(options Options, output io.Writer) (*Runner, error) {
 	}
 	encoder := json.NewEncoder(output)
 	encoder.SetEscapeHTML(false)
+	headers := options.Headers.Clone()
+	if headers == nil {
+		headers = make(http.Header)
+	}
+	if headers.Get("User-Agent") == "" {
+		headers.Set("User-Agent", browserUserAgents[rand.IntN(len(browserUserAgents))])
+	}
 	return &Runner{
 		options:    options,
 		client:     client,
 		discoverer: discoverer,
 		limiter:    newLimiter(options.RateLimitPerSecond),
 		encoder:    encoder,
+		headers:    headers,
 	}, nil
 }
 
@@ -312,7 +328,12 @@ func (r *Runner) fetch(ctx context.Context, rawURL string) (httpResponse, error)
 		return httpResponse{}, err
 	}
 	req.Header.Set("Accept", "text/html,application/javascript,text/javascript,*/*;q=0.8")
-	req.Header.Set("User-Agent", userAgent)
+	for name, values := range r.headers {
+		req.Header.Del(name)
+		for _, value := range values {
+			req.Header.Add(name, value)
+		}
+	}
 	resp, err := r.client.Do(req)
 	if err != nil {
 		return httpResponse{}, err

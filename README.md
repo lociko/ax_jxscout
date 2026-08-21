@@ -44,6 +44,23 @@ Read from a file:
 ./dist/ax-jxscout -input-file urls.txt > assets.jsonl
 ```
 
+The command selects one browser-like User-Agent at startup and uses it for the
+entire crawl. Supply repeatable `-H 'Name: Value'` options to override it or add
+other headers:
+
+```bash
+printf 'https://example.com/\n' |
+  ./dist/ax-jxscout \
+    -H 'User-Agent: Mozilla/5.0 custom' \
+    -H 'X-Environment: testing' \
+  > assets.jsonl
+```
+
+Header values are applied to the seed page and every subsequently fetched
+script or chunk. Because `-H` values are visible in process arguments, do not
+use it for secret cookies or authorization tokens; protected header-file input
+is planned separately.
+
 The default scope is the host from the seed URL and its redirect destination.
 Use `-allow-cross-origin` only when referenced CDN hosts are authorized. Run
 `./dist/ax-jxscout -h` for all limits and concurrency options.
